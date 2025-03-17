@@ -5,7 +5,7 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   const {sayHello} = require('./services/sayHelloWorld');
-  
+  console.log('Estou aqui doido')
   res.send(sayHello());
 });
 
