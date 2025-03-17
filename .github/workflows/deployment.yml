@@ -55,5 +55,5 @@ jobs:
           context: .
           push: true
           tags: |
-            docker build -t luizalexandrew/la-ci-cd:${{ env.VERSION }} .
-            docker push luizalexandrew/la-ci-cd:${{ env.VERSION }}
+            luizalexandrew/la-ci-cd:v1:lasted
+            luizalexandrew/la-ci-cd:v1:${{ env.VERSION }}
