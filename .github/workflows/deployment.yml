@@ -55,5 +55,6 @@ jobs:
           context: .
           push: true
           tags: |
-            luizalexandrew/la-ci-cd:v1:lasted
-            luizalexandrew/la-ci-cd:v1:${{ env.VERSION }}
+            luizalexandrew/la-ci-cd:v1
+            luizalexandrew/la-ci-cd:latest
+            luizalexandrew/la-ci-cd:v1-${{ env.VERSION }}
