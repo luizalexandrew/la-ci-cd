@@ -1,3 +1,3 @@
 exports.sayHello = (name='') => {
-    return `Hello ${name ? name : 'World'}!`
+    return `Hello ${name ? name : 'World Mother Fuck'}!`
 }
