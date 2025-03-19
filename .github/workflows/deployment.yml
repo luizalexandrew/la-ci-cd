@@ -41,7 +41,7 @@ jobs:
         if: success()
         run: echo "Deploying to Staging..."
   deploy-production:
-    needs: [test-ci, deploy_staging]
+    needs: [test-ci]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-20.04
     concurrency: deploy-to-production
@@ -59,11 +59,15 @@ jobs:
       #     approvers: luizalexandrew
       #     minimum-approvals: 1
       #     timeout-minutes: 10
-      - name: Approval for build image
-        uses: hmarr/await-approval@v1
+      - name: Wait_for_approval Action
+        uses: arun291091/wait_for_approval_gha@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        timeout-minutes: 10  # Tempo máximo para aprovação
+          base_repository_branch: main
+          github_org: luizalexandrew
+          repository_name: la-ci-cd
+          pr_reviewer: luizalexandrew
+          time_limit: 10
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Gerar versão baseada na data, hora e minuto
         id: version
         run: |
