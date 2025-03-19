@@ -43,7 +43,6 @@ jobs:
           secret: ${{ github.TOKEN }}
           approvers: luizalexandrew
           minimum-approvals: 1
-          fail-on-denial: true
       - name: Gerar versão baseada na data, hora e minuto
         id: version
         run: |
