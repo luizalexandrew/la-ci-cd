@@ -16,11 +16,13 @@ jobs:
   deploy_staging:
     runs-on: ubuntu-latest
     steps:
+      # Gerar versão e salvar como artifact
       - name: Gerar versão baseada na data, hora e minuto
         id: version
         run: |
           VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "${VERSION}" > version.txt
       - name: Wait for approval
         uses: trstringer/manual-approval@v1
         with:
@@ -30,8 +32,6 @@ jobs:
           timeout-minutes: 10
           issue-title: "Deploying v1.3.5 to prod from staging"
           issue-body: "Please approve or deny the deployment of version v1.3.5."
-          fail-on-denial: true
-
 
   test-ci:
     runs-on: ubuntu-20.04
@@ -74,6 +74,17 @@ jobs:
       #   run: |
       #     VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
       #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      # Baixar o artifact com a versão
+      - name: Download version artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: version
+      # Ler a versão do arquivo baixado
+      - name: Read version from artifact
+        run: |
+          VERSION=$(cat version.txt)
+          echo "Using version ${VERSION}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
       - run: docker build -t setup-nodejs .
       - name: Docker Login
         uses: docker/login-action@v2.1.0
