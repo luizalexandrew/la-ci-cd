@@ -113,11 +113,6 @@ jobs:
     needs: deploy-production
     runs-on: ubuntu-latest
     steps:
-      - name: Configurar Git para usar o GITHUB_TOKEN
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/fleet-rancher-state.git
       # Clone o repositório onde o arquivo YAML do Fleet está localizado
       - name: Checkout repositório de destino
         uses: actions/checkout@v2
@@ -125,6 +120,11 @@ jobs:
           repository: luizalexandrew/fleet-rancher-state  # Repositório de destino
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Configurar Git para usar o GITHUB_TOKEN
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/fleet-rancher-state.git
       # Baixar o artifact com a versão gerada
       - name: Download version artifact
         uses: actions/download-artifact@v4
