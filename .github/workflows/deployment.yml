@@ -30,15 +30,15 @@ jobs:
         with:
           name: version
           path: version.txt
-      - name: Wait for approval
-        uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: luizalexandrew
-          minimum-approvals: 1
-          timeout-minutes: 10
-          issue-title: "Deploying version ${{ env.VERSION }} to prod"
-          issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
+      # - name: Wait for approval
+      #   uses: trstringer/manual-approval@v1
+      #   with:
+      #     secret: ${{ secrets.GITHUB_TOKEN }}
+      #     approvers: luizalexandrew
+      #     minimum-approvals: 1
+      #     timeout-minutes: 10
+      #     issue-title: "Deploying version ${{ env.VERSION }} to prod"
+      #     issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
 
   test-ci:
     runs-on: ubuntu-20.04
@@ -108,3 +108,38 @@ jobs:
           tags: |
             luizalexandrew/la-ci-cd:latest
             luizalexandrew/la-ci-cd:${{ env.VERSION }}
+
+  update-rancher-fleet:
+    needs: deploy_staging
+    runs-on: ubuntu-latest
+    steps:
+      # Clone o repositório onde o arquivo YAML do Fleet está localizado
+      - name: Checkout repositório de destino
+        uses: actions/checkout@v2
+        with:
+          repository: luizalexandrew/fleet-rancher-state  # Repositório de destino
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Baixar o artifact com a versão gerada
+      - name: Download version artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: version
+
+      # Atualizar o arquivo YAML do Fleet com a versão
+      - name: Atualizar versão da imagem no arquivo YAML do Fleet
+        run: |
+          VERSION=$(cat version.txt)
+          echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
+          ls
+          # Substituindo qualquer versão no formato image: luizalexandrew/la-ci-cd:<qualquer_coisa>
+          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" deployment.yaml
+
+      # Commit e push da alteração para o repositório de destino
+      - name: Commit e push para o repositório de destino
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add deployment.yaml
+          git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
+          git push
