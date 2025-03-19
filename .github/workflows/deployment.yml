@@ -37,8 +37,8 @@ jobs:
           approvers: luizalexandrew
           minimum-approvals: 1
           timeout-minutes: 10
-          issue-title: "Deploying v1.3.5 to prod from staging"
-          issue-body: "Please approve or deny the deployment of version v1.3.5."
+          issue-title: "Deploying version ${{ env.VERSION }} to prod"
+          issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
 
   test-ci:
     runs-on: ubuntu-20.04
