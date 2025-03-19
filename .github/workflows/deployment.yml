@@ -47,6 +47,7 @@ jobs:
           secret: ${{ secrets.GITHUB_TOKEN }}
           approvers: luizalexandrew
           minimum-approvals: 1
+          timeout-minutes: 30
       - name: Gerar versão baseada na data, hora e minuto
         id: version
         run: |
