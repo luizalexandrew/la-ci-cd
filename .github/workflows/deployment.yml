@@ -52,22 +52,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      # - name: Wait for approval
-      #   uses: trstringer/manual-approval@v1
-      #   with:
-      #     secret: ${{ secrets.GITHUB_TOKEN }}
-      #     approvers: luizalexandrew
-      #     minimum-approvals: 1
-      #     timeout-minutes: 10
-      - name: Wait_for_approval Action
-        uses: arun291091/wait_for_approval_gha@v1
+      - name: Wait for approval
+        uses: trstringer/manual-approval@v1
         with:
-          base_repository_branch: main
-          github_org: luizalexandrew
-          repository_name: la-ci-cd
-          pr_reviewer: luizalexandrew
-          time_limit: 10
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: luizalexandrew
+          minimum-approvals: 1
+          timeout-minutes: 10
       - name: Gerar versão baseada na data, hora e minuto
         id: version
         run: |
