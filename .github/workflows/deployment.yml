@@ -28,9 +28,10 @@ jobs:
           approvers: luizalexandrew
           minimum-approvals: 1
           timeout-minutes: 10
-          issue-title: "Deploying ${{ env.VERSION }} to prod from staging"
-          issue-body: "Please approve or deny the deployment of version ${{ env.VERSION }}"
+          issue-title: "Deploying v1.3.5 to prod from staging"
+          issue-body: "Please approve or deny the deployment of version v1.3.5."
           fail-on-denial: true
+
 
   test-ci:
     runs-on: ubuntu-20.04
@@ -68,6 +69,11 @@ jobs:
       #     approvers: luizalexandrew
       #     minimum-approvals: 1
       #     timeout-minutes: 10
+      # - name: Gerar versão baseada na data, hora e minuto
+      #   id: version
+      #   run: |
+      #     VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
+      #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
       - run: docker build -t setup-nodejs .
       - name: Docker Login
         uses: docker/login-action@v2.1.0
