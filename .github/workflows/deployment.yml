@@ -13,6 +13,25 @@ permissions:
   pull-requests: write  # Permissão para interagir com PRs
 
 jobs:
+  deploy_staging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gerar versão baseada na data, hora e minuto
+        id: version
+        run: |
+          VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Wait for approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: luizalexandrew
+          minimum-approvals: 1
+          timeout-minutes: 10
+          issue-title: "Deploying ${{ env.VERSION }} to prod from staging"
+          issue-body: "Please approve or deny the deployment of version ${{ env.VERSION }}"
+          fail-on-denial: true
+
   test-ci:
     runs-on: ubuntu-20.04
     needs: [deploy_staging]
@@ -29,16 +48,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run test
-  deploy_staging:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait for approval
-        uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: luizalexandrew
-          minimum-approvals: 1
-          timeout-minutes: 10
+    
   deploy-production:
     needs: [test-ci]
     if: github.ref == 'refs/heads/main'
@@ -58,11 +68,6 @@ jobs:
       #     approvers: luizalexandrew
       #     minimum-approvals: 1
       #     timeout-minutes: 10
-      - name: Gerar versão baseada na data, hora e minuto
-        id: version
-        run: |
-          VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
       - run: docker build -t setup-nodejs .
       - name: Docker Login
         uses: docker/login-action@v2.1.0
