@@ -17,12 +17,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Gerar versão e salvar como artifact
+      # Gerar versão e salvar como artifact
       - name: Gerar versão baseada na data, hora e minuto
         id: version
         run: |
           VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "${VERSION}" > version.txt
+
+      - name: Upload version as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: version
+          path: version.txt
       - name: Wait for approval
         uses: trstringer/manual-approval@v1
         with:
@@ -76,9 +83,10 @@ jobs:
       #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
       # Baixar o artifact com a versão
       - name: Download version artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: version
+
       # Ler a versão do arquivo baixado
       - name: Read version from artifact
         run: |
