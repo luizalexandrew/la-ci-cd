@@ -110,7 +110,7 @@ jobs:
             luizalexandrew/la-ci-cd:${{ env.VERSION }}
 
   update-rancher-fleet:
-    needs: deploy_production
+    needs: deploy-production
     runs-on: ubuntu-latest
     steps:
       # Clone o repositório onde o arquivo YAML do Fleet está localizado
