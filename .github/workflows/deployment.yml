@@ -32,16 +32,15 @@ jobs:
   deploy_staging:
     runs-on: ubuntu-latest
     steps:
-      - name: Awaiting Approval for Staging
-        uses: hmarr/await-approval@v1
+      - name: Wait for approval
+        uses: trstringer/manual-approval@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deploy to Staging
-        if: success()
-        run: echo "Deploying to Staging..."
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: luizalexandrew
+          minimum-approvals: 1
+          timeout-minutes: 10
   deploy-production:
-    needs: [test-ci]
+    needs: [test-ci, deploy_staging]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-20.04
     concurrency: deploy-to-production
@@ -52,13 +51,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      - name: Wait for approval
-        uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: luizalexandrew
-          minimum-approvals: 1
-          timeout-minutes: 10
+      # - name: Wait for approval
+      #   uses: trstringer/manual-approval@v1
+      #   with:
+      #     secret: ${{ secrets.GITHUB_TOKEN }}
+      #     approvers: luizalexandrew
+      #     minimum-approvals: 1
+      #     timeout-minutes: 10
       - name: Gerar versão baseada na data, hora e minuto
         id: version
         run: |
