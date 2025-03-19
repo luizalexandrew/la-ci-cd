@@ -37,11 +37,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      - uses: trstringer/manual-approval@v1
+      - name: Wait for approval
+        uses: trstringer/manual-approval@v1
         with:
+          secret: ${{ steps.generate_token.outputs.token }}
+          approvers: myteam
           minimum-approvals: 1
-          issue-title: "Build image?"
-          issue-body: "Please approve or deny to build the image"
           fail-on-denial: true
       - name: Gerar versão baseada na data, hora e minuto
         id: version
