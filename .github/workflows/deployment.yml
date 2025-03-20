@@ -25,6 +25,7 @@ jobs:
       #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
       #     echo "${VERSION}" > version.txt
       - name: Gerar versão baseada no npm
+        uses: actions/checkout@v4
         id: version
         run: |
           VERSION=$(npm version patch)  # Exemplo: 1.0.1
