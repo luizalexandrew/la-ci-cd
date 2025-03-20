@@ -1,6 +1,3 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Deploy
 
 on:
@@ -9,8 +6,8 @@ on:
     branches: [main, develop]
 
 permissions:
-  issues: write  # Permissão para criar issues
-  pull-requests: write  # Permissão para interagir com PRs
+  issues: write
+  pull-requests: write
   contents: write
 
 jobs:
@@ -36,7 +33,7 @@ jobs:
           secret: ${{ secrets.GITHUB_TOKEN }}
           approvers: luizalexandrew
           minimum-approvals: 1
-          timeout-minutes: 10
+          timeout-minutes: 2
           issue-title: "Deploying version ${{ env.VERSION }} to prod"
           issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
 
@@ -47,7 +44,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v2
@@ -88,7 +84,6 @@ jobs:
         with:
           name: version
 
-      # Ler a versão do arquivo baixado
       - name: Read version from artifact
         run: |
           VERSION=$(cat version.txt)
@@ -136,17 +131,6 @@ jobs:
 
       - name: echo ${{ github.workspace }}
         run: echo ${{ github.workspace }}  # Lists only directories
-
-      # # Commit e push da alteração para o repositório de destino
-      # - name: Commit e push para o repositório de destino
-      #   run: |
-      #     git config user.name "GitHub Actions"
-      #     git config user.email "actions@github.com"
-      #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
-      #     git add ${{ github.workspace }}/infra/deployment.yaml
-      #     git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
-      #     git push
-
 
       - uses: actions/checkout@v4
         with:
