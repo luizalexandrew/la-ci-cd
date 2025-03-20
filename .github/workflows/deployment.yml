@@ -128,12 +128,12 @@ jobs:
       - name: List Files
         run: ls -la
 
-      # Atualizar o arquivo YAML do Fleet com a versão
-      - name: Atualizar versão da imagem no arquivo YAML do Fleet
-        run: |
-          VERSION=$(cat version.txt)
-          echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
-          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" ${{ github.workspace }}/infra/deployment.yaml
+      # # Atualizar o arquivo YAML do Fleet com a versão
+      # - name: Atualizar versão da imagem no arquivo YAML do Fleet
+      #   run: |
+      #     VERSION=$(cat version.txt)
+      #     echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
+      #     sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" ${{ github.workspace }}/infra/deployment.yaml
 
       - name: List Folders in Repository
         run: ls -d */  # Lists only directories
@@ -160,6 +160,9 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
+          VERSION=$(cat version.txt)
+          echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
+          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" ${{ github.workspace }}/infra/deployment.yaml
           git add ${{ github.workspace }}/infra/deployment.yaml
           git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
       - name: Commit & Push changes
