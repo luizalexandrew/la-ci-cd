@@ -29,10 +29,11 @@ jobs:
         with:
           fetch-depth: 0  # Garante que todas as tags sejam clonadas
 
-      # - name: Configurar Git
-      #   run: |
-      #     git config --global user.name "github-actions[bot]"
-      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Configurar Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
 
       - name: Gerar versão baseada no npm
         id: version
@@ -41,6 +42,7 @@ jobs:
           git push --follow-tags
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "${VERSION}" > version.txt
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git --follow-tags
 
       - name: Upload version as artifact
         uses: actions/upload-artifact@v4
