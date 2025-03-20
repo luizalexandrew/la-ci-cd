@@ -35,10 +35,10 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
 
-      - name: Gerar versão baseada no npm
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+      # - name: Gerar versão baseada no npm
+      #   uses: actions/checkout@v2
+      #   with:
+      #     token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
       - name: Configurar Git
         run: |
