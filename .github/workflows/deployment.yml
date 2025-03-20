@@ -164,7 +164,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
-          git add ${{ github.workspace }}/infra/deployment.yaml
+          git add .
           git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
       - name: Commit & Push changes
         uses: actions-js/push@master
