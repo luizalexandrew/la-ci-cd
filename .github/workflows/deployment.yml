@@ -151,6 +151,12 @@ jobs:
       #     git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
       #     git push
 
+      # Baixar o artifact com a versão gerada
+      - name: Download version artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: version
+
       - uses: actions/checkout@master
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
