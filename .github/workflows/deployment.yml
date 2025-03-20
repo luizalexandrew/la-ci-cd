@@ -40,22 +40,14 @@ jobs:
       #     timeout-minutes: 10
       #     issue-title: "Deploying version ${{ env.VERSION }} to prod"
       #     issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
-    - name: Checkout do repositório
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}  # Usando o GITHUB_TOKEN gerado automaticamente
-
-    - name: Configuração do Git
-      run: |
-        git config --global user.name 'AboutBits Tech'
-        git config --global user.email 'tech@aboutbits.it'
-
-    - name: Gerar nova versão com npm
-      run: npm version patch -m "[RELEASE] %s"
-
-    - name: Push para o repositório
-      run: |
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main  # Autenticação explícita com GITHUB_TOKEN
+      - uses: actions/checkout@v2
+      - run: git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - run: git config user.name "$GITHUB_ACTOR"
+      - run: npm version minor -m "v%s"
+      - run: VERSION=$(node -p "require('./package.json').version")
+      - run: git tag ${VERSION}
+      - run: git push "https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
+      - run: git push "https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --tags
 
   test-ci:
     runs-on: ubuntu-20.04
