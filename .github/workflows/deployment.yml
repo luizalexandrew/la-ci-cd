@@ -30,15 +30,15 @@ jobs:
           name: version
           path: version.txt
 
-      # - name: Wait for approval
-      #   uses: trstringer/manual-approval@v1
-      #   with:
-      #     secret: ${{ secrets.GITHUB_TOKEN }}
-      #     approvers: luizalexandrew
-      #     minimum-approvals: 1
-      #     timeout-minutes: 10
-      #     issue-title: "Deploying version ${{ env.VERSION }} to prod"
-      #     issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
+      - name: Wait for approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: luizalexandrew
+          minimum-approvals: 1
+          timeout-minutes: 10
+          issue-title: "Deploying version ${{ env.VERSION }} to prod"
+          issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
 
 
   test-ci:
@@ -148,7 +148,7 @@ jobs:
       #     git push
 
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
