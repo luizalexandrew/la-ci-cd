@@ -119,6 +119,11 @@ jobs:
         with:
           name: version
 
+      - name: Show Current Directory
+        run: pwd
+      - name: List Files
+        run: ls -la
+
       # Atualizar o arquivo YAML do Fleet com a versão
       - name: Atualizar versão da imagem no arquivo YAML do Fleet
         run: |
