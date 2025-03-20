@@ -113,7 +113,6 @@ jobs:
     needs: deploy-production
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       # Clone o repositório onde o arquivo YAML do Fleet está localizado
       - name: Checkout repositório de destino
       # Baixar o artifact com a versão gerada
