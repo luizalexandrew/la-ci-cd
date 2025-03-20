@@ -36,8 +36,7 @@ jobs:
 
 
       - name: Gerar versão baseada no npm
-        id: version
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
