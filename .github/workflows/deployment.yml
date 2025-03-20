@@ -116,7 +116,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       # Baixar o artifact com a versão gerada
       - name: Download version artifact
         uses: actions/download-artifact@v4
@@ -146,6 +146,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
           git add ${{ github.workspace }}/infra/deployment.yaml
           git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
           git push
