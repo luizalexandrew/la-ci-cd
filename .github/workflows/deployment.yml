@@ -57,61 +57,61 @@ jobs:
     - run: npm ci
     - run: npm run test
     
-  # deploy-production:
-  #   needs: [test-ci]
-  #   if: github.ref == 'refs/heads/main'
-  #   runs-on: ubuntu-20.04
-  #   concurrency: deploy-to-production
-  #   environment: production
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Use Node.js 10.x
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: 16.x
-  #     # - name: Wait for approval
-  #     #   uses: trstringer/manual-approval@v1
-  #     #   with:
-  #     #     secret: ${{ secrets.GITHUB_TOKEN }}
-  #     #     approvers: luizalexandrew
-  #     #     minimum-approvals: 1
-  #     #     timeout-minutes: 10
-  #     # - name: Gerar versão baseada na data, hora e minuto
-  #     #   id: version
-  #     #   run: |
-  #     #     VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
-  #     #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
-  #     # Baixar o artifact com a versão
-  #     - name: Download version artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: version
+  deploy-production:
+    needs: [test-ci]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-20.04
+    concurrency: deploy-to-production
+    environment: production
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+      # - name: Wait for approval
+      #   uses: trstringer/manual-approval@v1
+      #   with:
+      #     secret: ${{ secrets.GITHUB_TOKEN }}
+      #     approvers: luizalexandrew
+      #     minimum-approvals: 1
+      #     timeout-minutes: 10
+      # - name: Gerar versão baseada na data, hora e minuto
+      #   id: version
+      #   run: |
+      #     VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
+      #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      # Baixar o artifact com a versão
+      - name: Download version artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: version
 
-  #     # Ler a versão do arquivo baixado
-  #     - name: Read version from artifact
-  #       run: |
-  #         VERSION=$(cat version.txt)
-  #         echo "Using version ${VERSION}"
-  #         echo "VERSION=${VERSION}" >> $GITHUB_ENV
-  #     - run: docker build -t setup-nodejs .
-  #     - name: Docker Login
-  #       uses: docker/login-action@v2.1.0
-  #       with:
-  #         username: ${{ secrets.DOCKERHUB_USERNAME }}  
-  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # Ler a versão do arquivo baixado
+      - name: Read version from artifact
+        run: |
+          VERSION=$(cat version.txt)
+          echo "Using version ${VERSION}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - run: docker build -t setup-nodejs .
+      - name: Docker Login
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}  
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
           
-  #     - name: Build and push Docker images
-  #       uses: docker/build-push-action@v3.2.0
-  #       with:
-  #         context: .
-  #         push: true
-  #         tags: |
-  #           luizalexandrew/la-ci-cd:latest
-  #           luizalexandrew/la-ci-cd:${{ env.VERSION }}
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v3.2.0
+        with:
+          context: .
+          push: true
+          tags: |
+            luizalexandrew/la-ci-cd:latest
+            luizalexandrew/la-ci-cd:${{ env.VERSION }}
 
   update-rancher-fleet:
-    # needs: deploy-production
-    needs: [test-ci]
+    needs: deploy-production
+    # needs: [test-ci]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -128,12 +128,14 @@ jobs:
       - name: List Files
         run: ls -la
 
-      # # Atualizar o arquivo YAML do Fleet com a versão
-      # - name: Atualizar versão da imagem no arquivo YAML do Fleet
-      #   run: |
-      #     VERSION=$(cat version.txt)
-      #     echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
-      #     sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" ${{ github.workspace }}/infra/deployment.yaml
+      # Atualizar o arquivo YAML do Fleet com a versão
+      - name: Atualizar versão da imagem no arquivo YAML do Fleet
+        run: |
+          VERSION=$(cat version.txt)
+          echo "Using version ${VERSION}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
+          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" ${{ github.workspace }}/infra/deployment.yaml
 
       - name: List Folders in Repository
         run: ls -d */  # Lists only directories
@@ -151,11 +153,6 @@ jobs:
       #     git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
       #     git push
 
-      # Baixar o artifact com a versão gerada
-      - name: Download version artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: version
 
       - uses: actions/checkout@master
         with:
@@ -166,11 +163,6 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
-          VERSION=$(cat version.txt)
-          echo "Using version ${VERSION}"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
-          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" ${{ github.workspace }}/infra/deployment.yaml
           git add ${{ github.workspace }}/infra/deployment.yaml
           git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
       - name: Commit & Push changes
