@@ -40,12 +40,23 @@ jobs:
       #   with:
       #     token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
 
-      - name: Configurar Git
+      - name: Checkout do repositório
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Usando GITHUB_TOKEN gerado automaticamente
+
+      - name: Configuração do Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          npm version patch -m "[RELEASE] %s"
-          git push
+
+      - name: Gerar nova versão com npm
+        run: |
+          npm version patch -m "[RELEASE] %s"  # Atualiza a versão e cria o commit
+
+      - name: Push para o repositório
+        run: |
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main  # Empurra para a branch 'main'
 
       - name: Upload version as artifact
         uses: actions/upload-artifact@v4
