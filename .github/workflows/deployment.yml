@@ -27,8 +27,6 @@ jobs:
       - name: Gerar versão baseada no npm
         id: version
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           VERSION=$(npm version patch)  # Exemplo: 1.0.1
           git push --follow-tags
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
