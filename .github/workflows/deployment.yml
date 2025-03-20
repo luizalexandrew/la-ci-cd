@@ -113,11 +113,9 @@ jobs:
     needs: deploy-production
     runs-on: ubuntu-latest
     steps:
-      # Clone o repositório onde o arquivo YAML do Fleet está localizado
-      - name: Checkout repositório de destino
       # Baixar o artifact com a versão gerada
       - name: Download version artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: version
 
@@ -126,7 +124,7 @@ jobs:
         run: |
           VERSION=$(cat version.txt)
           echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
-          ls
+          
           sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" /infra/deployment.yaml
 
       # Commit e push da alteração para o repositório de destino
@@ -134,6 +132,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add deployment.yaml
+          git add /infra/deployment.yaml
           git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
           git push
