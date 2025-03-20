@@ -127,6 +127,9 @@ jobs:
           cd /home/runner/work/la-ci-cd/la-ci-cd
           sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" /home/runner/work/la-ci-cd/la-ci-cd/infra/deployment.yaml
 
+      - name: List Folders in Repository
+        run: ls -d */  # Lists only directories
+
       # Commit e push da alteração para o repositório de destino
       - name: Commit e push para o repositório de destino
         run: |
