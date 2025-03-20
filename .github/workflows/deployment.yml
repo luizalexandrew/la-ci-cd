@@ -136,6 +136,7 @@ jobs:
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
           sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" ${{ github.workspace }}/infra/deployment.yaml
+          cat ${{ github.workspace }}/infra/deployment.yaml
 
       - name: List Folders in Repository
         run: ls -d */  # Lists only directories
