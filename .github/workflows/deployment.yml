@@ -18,12 +18,21 @@ jobs:
     steps:
       # Gerar versão e salvar como artifact
       # Gerar versão e salvar como artifact
-      - name: Gerar versão baseada na data, hora e minuto
+      # - name: Gerar versão baseada na data, hora e minuto
+      #   id: version
+      #   run: |
+      #     VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
+      #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      #     echo "${VERSION}" > version.txt
+      - name: Gerar versão baseada no npm
         id: version
         run: |
-          VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          VERSION=$(npm version patch)  # Exemplo: 1.0.1
+          git push --follow-tags
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "${VERSION}" > version.txt
+          echo "${VERSION}" > version.txt  
 
       - name: Upload version as artifact
         uses: actions/upload-artifact@v4
