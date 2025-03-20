@@ -11,6 +11,7 @@ on:
 permissions:
   issues: write  # Permissão para criar issues
   pull-requests: write  # Permissão para interagir com PRs
+  contents: write
 
 jobs:
   deploy_staging:
@@ -147,7 +148,7 @@ jobs:
       #     git push
 
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
