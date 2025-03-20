@@ -40,16 +40,22 @@ jobs:
       #     timeout-minutes: 10
       #     issue-title: "Deploying version ${{ env.VERSION }} to prod"
       #     issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
-      - name: Checkout do repositório
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}  # Usando o GH_PERSONAL_ACCESS_TOKEN
+    - name: Checkout do repositório
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}  # Usando o GITHUB_TOKEN gerado automaticamente
 
-      - run: git config --global user.name 'AboutBits Tech'
-      - run: git config --global user.email 'tech@aboutbits.it'
-      - run: npm version patch -m "[RELEASE] %s"
-      - run: git push https://x-access-token:${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }} HEAD:main  # Autenticação explícita com GH_PERSONAL_ACCESS_TOKEN
+    - name: Configuração do Git
+      run: |
+        git config --global user.name 'AboutBits Tech'
+        git config --global user.email 'tech@aboutbits.it'
 
+    - name: Gerar nova versão com npm
+      run: npm version patch -m "[RELEASE] %s"
+
+    - name: Push para o repositório
+      run: |
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main  # Autenticação explícita com GITHUB_TOKEN
 
   test-ci:
     runs-on: ubuntu-20.04
