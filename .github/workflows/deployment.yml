@@ -124,12 +124,13 @@ jobs:
         run: |
           VERSION=$(cat version.txt)
           echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
-          ls
+          cd /home/runner/work/la-ci-cd/la-ci-cd
           sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" /infra/deployment.yaml
 
       # Commit e push da alteração para o repositório de destino
       - name: Commit e push para o repositório de destino
         run: |
+          cd /home/runner/work/la-ci-cd/la-ci-cd
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add /infra/deployment.yaml
