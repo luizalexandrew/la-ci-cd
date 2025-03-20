@@ -141,12 +141,28 @@ jobs:
       - name: echo ${{ github.workspace }}
         run: echo ${{ github.workspace }}  # Lists only directories
 
-      # Commit e push da alteração para o repositório de destino
-      - name: Commit e push para o repositório de destino
+      # # Commit e push da alteração para o repositório de destino
+      # - name: Commit e push para o repositório de destino
+      #   run: |
+      #     git config user.name "GitHub Actions"
+      #     git config user.email "actions@github.com"
+      #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
+      #     git add ${{ github.workspace }}/infra/deployment.yaml
+      #     git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
+      #     git push
+
+      - uses: actions/checkout@master
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0             # otherwise, you will fail to push refs to dest repo
+      - name: Create local changes
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
           git add ${{ github.workspace }}/infra/deployment.yaml
           git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
-          git push
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
