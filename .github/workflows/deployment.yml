@@ -129,8 +129,7 @@ jobs:
         run: |
           VERSION=$(cat version.txt)
           echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
-          cd /home/runner/work/la-ci-cd/la-ci-cd
-          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" /home/runner/work/la-ci-cd/infra/deployment.yaml
+          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" /infra/deployment.yaml
 
       - name: List Folders in Repository
         run: ls -d */  # Lists only directories
@@ -140,6 +139,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add /home/runner/work/la-ci-cd/infra/deployment.yaml
+          git add /infra/deployment.yaml
           git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
           git push
