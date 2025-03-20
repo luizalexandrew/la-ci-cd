@@ -123,11 +123,6 @@ jobs:
         with:
           name: version
 
-      - name: Show Current Directory
-        run: cd /
-      - name: List Files
-        run: ls -la
-
       # Atualizar o arquivo YAML do Fleet com a versão
       - name: Atualizar versão da imagem no arquivo YAML do Fleet
         run: |
@@ -168,6 +163,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
           git add .
           git commit -m "Atualizar versão da imagem do Fleet para ${VERSION}"
+          git push
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
