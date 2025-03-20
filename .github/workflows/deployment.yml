@@ -115,7 +115,7 @@ jobs:
     steps:
       # Baixar o artifact com a versão gerada
       - name: Download version artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: version
 
