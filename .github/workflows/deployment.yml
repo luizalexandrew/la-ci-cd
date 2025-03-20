@@ -167,6 +167,8 @@ jobs:
           git config user.email "actions@github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
           VERSION=$(cat version.txt)
+          echo "Using version ${VERSION}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
           sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" ${{ github.workspace }}/infra/deployment.yaml
           git add ${{ github.workspace }}/infra/deployment.yaml
