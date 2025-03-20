@@ -120,7 +120,7 @@ jobs:
           name: version
 
       - name: Show Current Directory
-        run: pwd
+        run: cd /
       - name: List Files
         run: ls -la
 
