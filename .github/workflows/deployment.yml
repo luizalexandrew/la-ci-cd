@@ -24,14 +24,23 @@ jobs:
       #     VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
       #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
       #     echo "${VERSION}" > version.txt
-      - name: Gerar versão baseada no npm
+      - name: Checkout do código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Garante que todas as tags sejam clonadas
+
+      - name: Configurar Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Gerar versão baseada no npm
         id: version
         run: |
           VERSION=$(npm version patch)  # Exemplo: 1.0.1
           git push --follow-tags
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "${VERSION}" > version.txt  
+          echo "${VERSION}" > version.txt
 
       - name: Upload version as artifact
         uses: actions/upload-artifact@v4
