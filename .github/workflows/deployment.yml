@@ -114,6 +114,9 @@ jobs:
     needs: [test-ci]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
       # Baixar o artifact com a versão gerada
       - name: Download version artifact
         uses: actions/download-artifact@v4
