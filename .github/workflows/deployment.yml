@@ -24,46 +24,13 @@ jobs:
       #     VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
       #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
       #     echo "${VERSION}" > version.txt
-      - name: Checkout do código
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Garante que todas as tags sejam clonadas
 
-      - name: Configurar Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-
-      # - name: Gerar versão baseada no npm
-      #   uses: actions/checkout@v2
+      # - name: Upload version as artifact
+      #   uses: actions/upload-artifact@v4
       #   with:
-      #     token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-      - name: Checkout do repositório
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # Usando GITHUB_TOKEN gerado automaticamente
+      #     name: version
+      #     path: version.txt
 
-      - name: Configuração do Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Gerar nova versão com npm
-        run: |
-          npm version patch -m "[RELEASE] %s"  # Atualiza a versão e cria o commit
-
-      - name: Push para o repositório
-        run: |
-          git push https://github.com/${{ github.repository }} HEAD:main  # Empurra para a branch 'main'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Passando o token corretamente
-
-      - name: Upload version as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: version
-          path: version.txt
       # - name: Wait for approval
       #   uses: trstringer/manual-approval@v1
       #   with:
@@ -73,6 +40,14 @@ jobs:
       #     timeout-minutes: 10
       #     issue-title: "Deploying version ${{ env.VERSION }} to prod"
       #     issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+      - run: git config --global user.name 'AboutBits Tech'
+      - run: git config --global user.email 'tech@aboutbits.it'
+      - run: npm version patch -m "[RELEASE] %s"
+      - run: git push
+
 
   test-ci:
     runs-on: ubuntu-20.04
