@@ -16,20 +16,18 @@ jobs:
   deploy_staging:
     runs-on: ubuntu-latest
     steps:
-      # Gerar versão e salvar como artifact
-      # Gerar versão e salvar como artifact
-      # - name: Gerar versão baseada na data, hora e minuto
-      #   id: version
-      #   run: |
-      #     VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
-      #     echo "VERSION=${VERSION}" >> $GITHUB_ENV
-      #     echo "${VERSION}" > version.txt
+      - name: Gerar versão baseada na data, hora e minuto
+        id: version
+        run: |
+          VERSION=$(date +'%Y%m%d%H%M')  # Exemplo: 202503171230
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "${VERSION}" > version.txt
 
-      # - name: Upload version as artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: version
-      #     path: version.txt
+      - name: Upload version as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: version
+          path: version.txt
 
       # - name: Wait for approval
       #   uses: trstringer/manual-approval@v1
@@ -40,14 +38,7 @@ jobs:
       #     timeout-minutes: 10
       #     issue-title: "Deploying version ${{ env.VERSION }} to prod"
       #     issue-body: "Please approve or deny the deployment of ${{ env.VERSION }}"
-      - uses: actions/checkout@v3
-      - run: git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-      - run: git config user.name "$GITHUB_ACTOR"
-      - run: npm version minor -m "v%s"
-      - run: VERSION=$(node -p "require('./package.json').version")
-      - run: git tag ${VERSION}
-      - run: git push "https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
-      - run: git push "https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --tags
+
 
   test-ci:
     runs-on: ubuntu-20.04
