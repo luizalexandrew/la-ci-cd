@@ -115,16 +115,6 @@ jobs:
     steps:
       # Clone o repositório onde o arquivo YAML do Fleet está localizado
       - name: Checkout repositório de destino
-        uses: actions/checkout@v2
-        with:
-          repository: luizalexandrew/fleet-rancher-state  # Repositório de destino
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Configurar Git para usar o GITHUB_TOKEN
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/fleet-rancher-state.git
       # Baixar o artifact com a versão gerada
       - name: Download version artifact
         uses: actions/download-artifact@v4
@@ -137,8 +127,7 @@ jobs:
           VERSION=$(cat version.txt)
           echo "Atualizando a versão da imagem no Fleet para ${VERSION}"
           ls
-          # Substituindo qualquer versão no formato image: luizalexandrew/la-ci-cd:<qualquer_coisa>
-          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" deployment.yaml
+          sed -i -E "s|(image: luizalexandrew/la-ci-cd:)[^ ]*|\1${VERSION}|g" /infra/deployment.yaml
 
       # Commit e push da alteração para o repositório de destino
       - name: Commit e push para o repositório de destino

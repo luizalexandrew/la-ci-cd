@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: la-ci-di-app
+spec:
+  selector:
+    matchLabels:
+      app: la-ci-di-app
+      tier: la-ci-di-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: la-ci-di-app
+        tier: la-ci-di-app
+    spec:
+      containers:
+      - name: php-redis
+        image: luizalexandrew/la-ci-cd:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: la-ci-di-app
+  labels:
+    app: la-ci-di-app
+    tier: la-ci-di-app
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+  selector:
+    app: la-ci-di-app
+    tier: la-ci-di-app
+  externalIPs: 
+    - 201.16.246.241
