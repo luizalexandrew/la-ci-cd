@@ -147,7 +147,7 @@ jobs:
       #     git push
 
 
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
