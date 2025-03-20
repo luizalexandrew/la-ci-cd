@@ -39,10 +39,12 @@ jobs:
         id: version
         run: |
           VERSION=$(npm version patch)  # Exemplo: 1.0.1
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git
           git push --follow-tags
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "${VERSION}" > version.txt
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/luizalexandrew/la-ci-cd.git --follow-tags
 
       - name: Upload version as artifact
         uses: actions/upload-artifact@v4
