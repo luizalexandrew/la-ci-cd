@@ -37,14 +37,13 @@ jobs:
 
       - name: Gerar versão baseada no npm
         id: version
-        steps:
-        - uses: actions/checkout@v2
-          with:
-            token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-        - run: git config --global user.name 'AboutBits Tech'
-        - run: git config --global user.email 'tech@aboutbits.it'
-        - run: npm version patch -m "[RELEASE] %s"
-        - run: git push
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+      - run: git config --global user.name 'AboutBits Tech'
+      - run: git config --global user.email 'tech@aboutbits.it'
+      - run: npm version patch -m "[RELEASE] %s"
+      - run: git push
 
       - name: Upload version as artifact
         uses: actions/upload-artifact@v4
