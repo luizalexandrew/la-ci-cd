@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: la-ci-di-app
+  namespace: sofaltaeu-prd
 spec:
   selector:
     matchLabels:
