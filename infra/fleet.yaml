@@ -1,0 +1,18 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepository
+metadata:
+  name: oloquinhomeu
+  namespace: fleet-system
+spec:
+  url: https://github.com/seu-usuario/seu-repositorio.git
+  branch: main
+  interval: 1m  # Aqui está o intervalo de verificação (5 minutos neste caso)
+  imageScans:
+    - policy:
+        semver:
+          range: "*"  # Pega a imagem mais recente conforme a semver
+      image: "https://hub.docker.com/r/luizalexandrew/*"  # Repositório Docker
+      tagName: latest  # Usa a tag 'latest' para pegar sempre a imagem mais recente
+      secretRef:
+        name: dockerhub-secret  # Segredo para acessar o repositório privado
+      interval: 1m  # Intervalo para escanear a imagem (pode ser diferente do intervalo do GitRepository)
