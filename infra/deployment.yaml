@@ -8,7 +8,7 @@ spec:
     matchLabels:
       app: la-ci-di-app
       tier: la-ci-di-app
-  replicas: 2
+  replicas: 4
   template:
     metadata:
       labels:
