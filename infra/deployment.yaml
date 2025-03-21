@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: la-ci-di-app
-  namespace: sofaltaeu-prd
 spec:
   selector:
     matchLabels:
@@ -17,8 +16,8 @@ spec:
         tier: la-ci-di-app
     spec:
       containers:
-      - name: la-ci-di-app
-        image: luizalexandrew/la-ci-cd:202503200341
+      - name: php-redis
+        image: luizalexandrew/la-ci-cd:latest
         imagePullPolicy: Always
         resources:
           requests:
