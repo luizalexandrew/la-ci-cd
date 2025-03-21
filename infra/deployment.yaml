@@ -16,7 +16,7 @@ spec:
         tier: la-ci-di-app
     spec:
       containers:
-      - name: php-redis
+      - name: la-ci-di-app
         image: luizalexandrew/la-ci-cd:202503200341
         imagePullPolicy: Always
         resources:
