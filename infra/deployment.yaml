@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: php-redis
-        image: luizalexandrew/la-ci-cd:202503210225
+        image: luizalexandrew/la-ci-cd:202504152149
         imagePullPolicy: Always
         resources:
           requests:
