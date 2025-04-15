@@ -39,7 +39,7 @@ jobs:
 
 
   test-ci:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [deploy_staging]
     strategy:
       matrix:
@@ -57,7 +57,7 @@ jobs:
   deploy-production:
     needs: [test-ci]
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     concurrency: deploy-to-production
     environment: production
     steps:
